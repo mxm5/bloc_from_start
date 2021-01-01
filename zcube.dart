@@ -22,18 +22,31 @@ class CounterCubit extends Cubit<int> {
   }
 }
 
-main(List<String> args) {
+main(List<String> args) async {
   AnsiPen someColorPen = AnsiPen()..rgb(r: 0, g: 0, b: .2, bg: true);
   final meFirstCubit = CounterCubit();
+  final listenrToStraem = meFirstCubit.listen((data) {
+    print(someColorPen('state is $data '));
+  });
   // final meFirstCubit = CounterCubit(0);
-  print('state is ' + someColorPen(meFirstCubit.state.toString()));
+  // print('state is ' + someColorPen(meFirstCubit.state.toString()));
+  // meFirstCubit.incremant();
+  // print('state is ' + someColorPen(meFirstCubit.state.toString()));
+  // meFirstCubit.decrement();
+  // print('state is ' + someColorPen(meFirstCubit.state.toString()));
   meFirstCubit.incremant();
-  print('state is ' + someColorPen(meFirstCubit.state.toString()));
-  meFirstCubit.decrement();
-  print('state is ' + someColorPen(meFirstCubit.state.toString()));
-
-  meFirstCubit.close();
+  meFirstCubit.incremant();
+  meFirstCubit.incremant();
+  meFirstCubit.incremant();
+  meFirstCubit.incremant();
+  // meFirstCubit.close();
   //! has error now because of importing Flutter Bloc
   // we must imported bloc alone
-// import 'package:flutter_bloc/flutter_bloc.dart';
+  // import 'package:flutter_bloc/flutter_bloc.dart';
+  // another way is to listen to a cubit cuase it is a stream and streams can be listened
+  await Future.delayed(Duration.zero);
+  // must use this for not canceling the sub before listening to it
+  await listenrToStraem.cancel();
+  await meFirstCubit.close();
+  // closing for not leaking
 }
