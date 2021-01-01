@@ -8,17 +8,27 @@ import 'package:bloc/bloc.dart';
 
 enum CounterEvevnts { increment, decrement }
 
+class OddTime extends Cubit<bool> {
+  OddTime() : super(true);
+
+  void toggle() {
+    print(state ? 'on' : 'off');
+    return emit(!state);
+  }
+}
+
 class CounterCubit extends Cubit<int> {
   CounterCubit() : super(0);
 
   void increment() => emit(state + 1);
   void decrement() => emit(state - 1);
 
-  @override
-  void onChange(Change<int> change) {
-    print(change);
-    super.onChange(change);
-  }
+  // @override
+  // void onChange(Change<int> change) {
+  //   print(change);
+  //   super.onChange(change);
+  // }
+
   // @override
   // Stream<int> mapEventToState(CounterEvevnts event) async* {
   //   switch (event) {
@@ -45,8 +55,24 @@ class CounterCubit extends Cubit<int> {
 // }
 // }
 
+class SimpleBlocObserver extends BlocObserver {
+  @override
+  void onChange(Cubit cubit, Change change) {
+    // print('${cubit.runtimeType} $change');
+    final x = change.nextState;
+    print(someColorPen('state is $x'));
+    super.onChange(cubit, change);
+  }
+
+  // @override
+  // void onEvent(Bloc bloc, Object event) {
+  //   print(event.toString());
+  //   super.onEvent(bloc, event);
+  // }
+}
+
+AnsiPen someColorPen = AnsiPen()..rgb(r: 0, g: 0, b: .2, bg: true);
 void main(List<String> args) async {
-  AnsiPen someColorPen = AnsiPen()..rgb(r: 0, g: 0, b: .2, bg: true);
   // final mbloc = CounterBloc();
   // final subscriber = mbloc.listen((data) {
   //   print(someColorPen('state is $data'));
@@ -90,15 +116,31 @@ void main(List<String> args) async {
   // await Future.delayed(Duration.zero);
   // await subscriber.cancel();
   // await mbloc.close();
-  final x = CounterCubit()
-    ..increment()
-    ..increment()
-    ..increment()
-    ..increment()
-    ..increment()
-    ..increment()
-    ..close();
-  print(x.state);
+  Bloc.observer = SimpleBlocObserver();
+  final x = CounterCubit();
+  final y = OddTime();
+  x.increment();
+  y.toggle();
+  x.decrement();
+  y.toggle();
+  x.decrement();
+  y.toggle();
+  x.decrement();
+  y.toggle();
+  x.increment();
+  y.toggle();
+  x.increment();
+  x.increment();
+  x.close();
+  y.close();
+  //   ..increment()
+  //   ..increment()
+  //   ..increment()
+  //   ..increment()
+  //   ..increment()
+  //   ..increment()
+  //   ..close();
+  // print(x.state);
 // Change { currentState: 0, nextState: 1 }
 // Change { currentState: 1, nextState: 2 }
 // Change { currentState: 2, nextState: 3 }
