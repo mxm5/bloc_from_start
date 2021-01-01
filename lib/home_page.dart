@@ -6,42 +6,63 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('counter of cubits'),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text('you have pressed the button this many times'),
-          BlocBuilder<CounterCubit, CounterState>(
-            builder: (context, state) {
-              final count = state.counterValue;
-              return showMessage(count);
-            },
-          ),
-          Row(
+        appBar: AppBar(
+          title: Text('counter of cubits'),
+        ),
+        body: BlocListener<CounterCubit, CounterState>(
+          listener: (context, state) {
+            if (state.wasIncremented) {
+              Scaffold.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(' Incremented by one'),
+                  duration: Duration(
+                    microseconds: 400,
+                  ),
+                ),
+              );
+            } else {
+              Scaffold.of(context).showSnackBar(SnackBar(
+                content: Text(' Decremented by one'),
+                duration: Duration(
+                  microseconds: 400,
+                ),
+              ));
+            }
+          },
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              FloatingActionButton(
-                onPressed: () {
-                  // BlocProvider.of<CounterCubit>(context).increment();
-                  context.read<CounterCubit>().increment();
+              Text('you have pressed the button this many times'),
+              BlocBuilder<CounterCubit, CounterState>(
+                builder: (context, state) {
+                  final count = state.counterValue;
+
+                  return showMessage(count);
                 },
-                child: Icon(Icons.add),
               ),
-              FloatingActionButton(
-                onPressed: () {
-                  // BlocProvider.of<CounterCubit>(context).decrement();
-                  context.read<CounterCubit>().decrement();
-                },
-                child: Icon(Icons.remove),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  FloatingActionButton(
+                    onPressed: () {
+                      // BlocProvider.of<CounterCubit>(context).increment();
+                      context.read<CounterCubit>().increment();
+                    },
+                    child: Icon(Icons.add),
+                  ),
+                  FloatingActionButton(
+                    onPressed: () {
+                      // BlocProvider.of<CounterCubit>(context).decrement();
+                      context.read<CounterCubit>().decrement();
+                    },
+                    child: Icon(Icons.remove),
+                  )
+                ],
               )
             ],
-          )
-        ],
-      ),
-    );
+          ),
+        ));
   }
 }
 
