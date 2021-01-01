@@ -53,12 +53,7 @@ class HomePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text('you have pressed the button this many times'),
-              Column(children: [
-                Message(
-                    title:
-                        '${state.counterValue} time is ${state.dateTime.second}'),
-                showMessage(state.counterValue)
-              ]),
+              Column(children: [showMessage(state.counterValue)]),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
