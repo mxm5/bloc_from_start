@@ -12,16 +12,20 @@ class OddTime extends Cubit<bool> {
   OddTime() : super(true);
 
   void toggle() {
-    print(state ? 'on' : 'off');
-    return emit(!state);
+    addError(Exception(err('the toggle error')), StackTrace.current);
+    // print(state ? 'on' : 'off');
+    emit(!state);
   }
 }
 
 class CounterCubit extends Cubit<int> {
   CounterCubit() : super(0);
-
-  void increment() => emit(state + 1);
-  void decrement() => emit(state - 1);
+  void increment() {
+    addError(Exception(err('increment error!')), StackTrace.current);
+    emit(state + 1);
+  }
+  // void increment() => emit(state + 1);
+  // void decrement() => emit(state - 1);
 
   // @override
   // void onChange(Change<int> change) {
@@ -60,8 +64,14 @@ class SimpleBlocObserver extends BlocObserver {
   void onChange(Cubit cubit, Change change) {
     // print('${cubit.runtimeType} $change');
     final x = change.nextState;
-    print(someColorPen('state is $x'));
+    print(someColorPen('  state is $x  '));
     super.onChange(cubit, change);
+  }
+
+  @override
+  void onError(Cubit cubit, Object error, StackTrace stackTrace) {
+    print(stak('${cubit.runtimeType} $error $stackTrace'));
+    super.onError(cubit, error, stackTrace);
   }
 
   // @override
@@ -72,6 +82,8 @@ class SimpleBlocObserver extends BlocObserver {
 }
 
 AnsiPen someColorPen = AnsiPen()..rgb(r: 0, g: 0, b: .2, bg: true);
+AnsiPen err = AnsiPen()..red(bg: true);
+AnsiPen stak = AnsiPen()..blue(bg: true);
 void main(List<String> args) async {
   // final mbloc = CounterBloc();
   // final subscriber = mbloc.listen((data) {
@@ -117,20 +129,24 @@ void main(List<String> args) async {
   // await subscriber.cancel();
   // await mbloc.close();
   Bloc.observer = SimpleBlocObserver();
+  // this over rides all change methods in all cubit
   final x = CounterCubit();
   final y = OddTime();
+  // x.increment();
+  // y.toggle();
+  // x.decrement();
+  // y.toggle();
+  // x.decrement();
+  // y.toggle();
+  // x.decrement();
+  y.toggle();
+  y.toggle();
+  y.toggle();
+  y.toggle();
   x.increment();
-  y.toggle();
-  x.decrement();
-  y.toggle();
-  x.decrement();
-  y.toggle();
-  x.decrement();
-  y.toggle();
-  x.increment();
-  y.toggle();
-  x.increment();
-  x.increment();
+  // y.toggle();
+  // x.increment();
+  // x.increment();
   x.close();
   y.close();
   //   ..increment()
