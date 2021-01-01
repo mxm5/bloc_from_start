@@ -59,6 +59,7 @@ import 'package:bloc/bloc.dart';
 enum CounterEvents { increment, decrement }
 
 AnsiPen purple = AnsiPen()..rgb(r: 0, g: 0, b: .2, bg: true);
+
 AnsiPen err = AnsiPen()..red(bg: true);
 AnsiPen black = AnsiPen()
   ..white(bg: true)
@@ -78,7 +79,7 @@ class SimpleBlocObserver extends BlocObserver {
 
   @override
   void onTransition(Bloc bloc, Transition transition) {
-    print(black(transition.event));
+    print(black('  ${transition.event}  '));
     super.onTransition(bloc, transition);
   }
 
@@ -112,13 +113,13 @@ class CounterBloc extends Bloc<CounterEvents, int> {
 
   @override
   void onChange(Change<int> change) {
-    print(stak(change));
+    print(stak('  $change  '));
     super.onChange(change);
   }
 
   @override
   void onTransition(Transition<CounterEvents, int> transition) {
-    print(yellow('$transition \n is a stream data'));
+    print(yellow('  $transition \n is a stream data  '));
     super.onTransition(transition);
   }
 }
@@ -131,7 +132,7 @@ Future<void> main() async {
   print(stak('bloc stream started'));
 
   final listener = bloc.listen((data) {
-    print(err(data) + ' : listenr');
+    print(err('  $data  ') + ' : listenr');
   });
 
   print(stak('listern stream started'));
@@ -151,11 +152,11 @@ Future<void> main() async {
 
   await listener.cancel();
 
-  print(err('listenning ended'));
+  print(err('  listenning ended  '));
 
   await bloc.close();
 
-  print(err('bloc stream ended'));
+  print(err('  bloc stream ended  '));
 }
 
 // final mbloc = CounterBloc();
