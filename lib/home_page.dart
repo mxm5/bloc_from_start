@@ -15,10 +15,9 @@ class HomePage extends StatelessWidget {
         children: [
           Text('you have pressed the button this many times'),
           BlocBuilder<CounterCubit, CounterState>(
-            // cubit: context.read<CounterCubit>(),
             builder: (context, state) {
-              return Text('${state.counterValue}',
-                  style: TextStyle(fontSize: 25));
+              final count = state.counterValue;
+              return showMessage(count);
             },
           ),
           Row(
@@ -41,6 +40,46 @@ class HomePage extends StatelessWidget {
             ],
           )
         ],
+      ),
+    );
+  }
+}
+
+Message showMessage(int count) {
+  if (count < 0) {
+    return Message(
+      title: ' nah negative $count ',
+    );
+  }
+  if (count % 2 == 0) {
+    return Message(
+      title: ' yaay $count ',
+    );
+  }
+  if (count == 5) {
+    return Message(
+      title: ' hmm the quinta $count',
+    );
+  } else {
+    return Message(
+      title: '$count',
+    );
+  }
+}
+
+class Message extends StatelessWidget {
+  final String title;
+  const Message({
+    Key key,
+    this.title,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      title,
+      style: TextStyle(
+        fontSize: 25,
       ),
     );
   }
