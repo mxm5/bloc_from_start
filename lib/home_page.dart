@@ -9,38 +9,56 @@ class HomePage extends StatelessWidget {
         appBar: AppBar(
           title: Text('counter of cubits'),
         ),
-        body: BlocListener<CounterCubit, CounterState>(
+        body: BlocConsumer<CounterCubit, CounterState>(
           listener: (context, state) {
             if (state.wasIncremented) {
+              Scaffold.of(context).hideCurrentSnackBar();
               Scaffold.of(context).showSnackBar(
                 SnackBar(
+                  // behavior: SnackBarBehavior.floating,
                   content: Text(' Incremented by one'),
                   duration: Duration(
-                    microseconds: 400,
+                    seconds: 5,
                   ),
                 ),
               );
             } else {
+              Scaffold.of(context).hideCurrentSnackBar();
+
               Scaffold.of(context).showSnackBar(SnackBar(
                 content: Text(' Decremented by one'),
                 duration: Duration(
-                  microseconds: 400,
+                  seconds: 5,
                 ),
               ));
             }
           },
-          child: Column(
+          listenWhen: (previous, current) {
+            // print(previous.wasIncremented.toString() + ' p ');
+            // print(previous.dateTime.second.toString() + ' p ');
+            // print(current.wasIncremented.toString() + ' c ');
+            // print(current.dateTime.second.toString() + ' c ');
+            return (previous.wasIncremented != current.wasIncremented ||
+                current.dateTime.second - previous.dateTime.second > 1);
+          },
+          // listenWhen: (previous, current) {
+          //   if (current.dateTime.second - previous.dateTime.second <= 2) {
+          //     return true;
+          //   } else {
+          //     return false;
+          //   }
+          // },
+          builder: (context, state) => Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text('you have pressed the button this many times'),
-              BlocBuilder<CounterCubit, CounterState>(
-                builder: (context, state) {
-                  final count = state.counterValue;
-
-                  return showMessage(count);
-                },
-              ),
+              Column(children: [
+                Message(
+                    title:
+                        '${state.counterValue} time is ${state.dateTime.second}'),
+                showMessage(state.counterValue)
+              ]),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
