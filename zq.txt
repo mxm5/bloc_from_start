@@ -1,0 +1,27 @@
+1 how to make head to be the commit you want
+    4a76d9d (HEAD -> main) done with reverting re revert
+    596a9db Revert "little edit"
+    a3dd921 (origin/main, web) little edit
+    af94fd9 13 added listen when condition to snakbars
+    e2c8ef0 12 created the snakbar with the block listenr
+    397e19d 11 created a conditional blocbuilder
+
+    like this to 
+    this
+
+    a3dd921 (HEAD -> main, origin/main, web) little edit
+    af94fd9 13 added listen when condition to snakbars
+    e2c8ef0 12 created the snakbar with the block listenr
+    397e19d 11 created a conditional blocbuilder
+    0192044 10 created a counter cubit
+
+    by removing bad commits
+
+    git reset --hard a3dd921 // the commit hash you want
+
+how to remove all changes if you dont want to commit them
+
+    git clean -f -d
+    all modifings are deleted
+    
+    
